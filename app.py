@@ -2,12 +2,14 @@ from flask import Flask, render_template
 from flask_security.datastore import SQLAlchemyUserDatastore
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemySessionUserDatastore, UserMixin, RoleMixin, login_required
+import datetime
 
 # Create app
 app = Flask(__name__)
 app.config['DEBUG']=True
 app.config['SECRET_KEY']='super-secret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+app.config['SECURITY_PASSWORD_SALT'] = 'some artitrary super secret string'
 
 # create database connection object
 db = SQLAlchemy(app)
@@ -28,7 +30,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
-    confirmed_at = db.Column(db.DateTime)
+    confirmed_at = db.Column(db.DateTime, default=datetime.datetime.now)
     roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
 
@@ -45,6 +47,7 @@ def create_user():
 
 # Views
 @app.route('/')
+@login_required
 def home():
     user_list = User.query.all()
 
@@ -53,11 +56,13 @@ def home():
         data={
             "id": user.id,
             "email": user.email,
-            "password": user.password
+            "password": user.password,
+            "active": user.active,
+            "confirmed_at": user.confirmed_at
         }
         datas.append(data)
 
     return render_template('index.html', users=datas)
 
-if __name__ = '__main__':
+if __name__ == '__main__':
     app.run()
