@@ -1,8 +1,7 @@
-from flask import Flask
-from flask_security import Security, login_required, \
-     SQLAlchemySessionUserDatastore
-from database import db_session, init_db
-from models import User, Role
+from flask import Flask, render
+from flask_security import Security, login_required, SQLAlchemySessionUserDatastore
+from Flask_Security.database import db_session, init_db
+from Flask_Security.models import User, Role
 
 # Create app
 app = Flask(__name__)
