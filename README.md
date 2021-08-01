@@ -25,3 +25,20 @@ templates/index.html
 ```
 
 ### Basic SQLAlchemy Application with session
+
+#### Dependencies
+```bash
+$ pip instal flask-security sqlalchemy
+```
+
+#### Environment Variable
+```bash
+$ 
+```
+
+#### Files
+```
+Flask_Security/app.py
+Flask_security/database.py
+Flask_security/models.py
+```
